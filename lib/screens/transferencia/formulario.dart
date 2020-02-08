@@ -9,8 +9,8 @@ const _textBotaoConfirmar = "Confirmar";
 const _rotuloCampoValor = "Valor";
 const _dicaCampovalor = "0.00";
 
-const _rotuloCampoNumeroConta = "Valor";
-const _dicaCampoNumeroConta = "0.00";
+const _rotuloCampoNumeroConta = "Numero da Conta";
+const _dicaCampoNumeroConta = "0000";
 
 
 
