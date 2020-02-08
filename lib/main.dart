@@ -8,7 +8,8 @@ class BytebankApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-      body: FormularioTransferencia(),
+      /*body: FormularioTransferencia(),*/
+      body: ListaTransferencias(),
     ));
   }
 }
@@ -27,28 +28,36 @@ class FormularioTransferencia extends StatelessWidget {
       ),
       body: Column(
         children: <Widget>[
-          Editor(controlador: _controladorCampoNumeroConta, rotulo: 'Numero da Conta', dica:'0000', icone: Icons.account_balance),
-          Editor(controlador: _controladorCampoValor, rotulo: 'Valor', dica:'0.00', icone: Icons.monetization_on),                      
+          Editor(
+              controlador: _controladorCampoNumeroConta,
+              rotulo: 'Numero da Conta',
+              dica: '0000',
+              icone: Icons.account_balance),
+          Editor(
+              controlador: _controladorCampoValor,
+              rotulo: 'Valor',
+              dica: '0.00',
+              icone: Icons.monetization_on),
           RaisedButton(
-            onPressed: () => _criaTransferencia(),
+            onPressed: () => _criaTransferencia(context),
             child: Text('Confirmar', style: TextStyle(fontSize: 16)),
           ),
         ],
       ),
     );
   }
-  
-}
 
-void _criaTransferencia(){
-    final int numeroConta =
-                  int.tryParse(_controladorCampoNumeroConta.text);
-              final double valor = double.tryParse(_controladorCampoValor.text);
-              if (numeroConta != null && valor != null) {
-                final tranferenciaCriada = Transferencia(valor, numeroConta);
-                debugPrint('$tranferenciaCriada');
-              }
+  void _criaTransferencia(BuildContext context) {
+    final int numeroConta = int.tryParse(_controladorCampoNumeroConta.text);
+    final double valor = double.tryParse(_controladorCampoValor.text);
+    if (numeroConta != null && valor != null) {
+      final tranferenciaCriada = Transferencia(valor, numeroConta);
+
+      debugPrint('$tranferenciaCriada');
+      Navigator.pop(context, tranferenciaCriada);
+    }
   }
+}
 
 /* Lista Tranferencia */
 class ListaTransferencias extends StatelessWidget {
@@ -65,6 +74,16 @@ class ListaTransferencias extends StatelessWidget {
       ]),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
+        onPressed: () {
+          final Future<Transferencia> future =
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return FormularioTransferencia();
+          }));
+          future.then((transferenciaRecebida) {
+            debugPrint('criando Transferencia');
+            debugPrint('$transferenciaRecebida');
+          });
+        },
       ),
     );
   }
@@ -100,7 +119,6 @@ class Transferencia {
 }
 
 class Editor extends StatelessWidget {
-
   final TextEditingController controlador;
   final String rotulo;
   final String dica;
